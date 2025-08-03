@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Thư viện các công cụ các tool, mô hình toán học, kho đề Toán THPT - Tác giả: Lê Văn Quý</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 48px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(34,119,204,0.10);
+      padding: 40px 30px 32px 30px;
+      animation: fadeIn 1s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    h1 {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 2.2em;
+      color: #2277cc;
+      text-align: center;
+      margin-bottom: 0;
+      letter-spacing: 1px;
+      line-height: 1.15;
+    }
+    .subtitle {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.35em;
+      color: #2277cc;
+      text-align: center;
+      margin-top: 0.2em;
+      margin-bottom: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    p {
+      color: #333;
+      text-align: center;
+      margin-bottom: 32px;
+      font-size: 1.15em;
+      line-height: 1.7;
+    }
+    .repo-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 28px;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    .repo-card {
+      background: linear-gradient(100deg, #f7fbff 70%, #e3f1fc 100%);
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(34,119,204,0.04);
+      padding: 18px 16px;
+      transition: box-shadow 0.22s, transform 0.22s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 4px solid #2277cc;
+      position: relative;
+    }
+    .repo-card:hover {
+      box-shadow: 0 6px 24px rgba(34,119,204,0.12);
+      transform: translateY(-4px) scale(1.02);
+      border-left: 4px solid #d34b1a;
+    }
+    .repo-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 2px;
+      filter: grayscale(0.2) brightness(1.1);
+    }
+    .repo-link {
+      font-weight: 500;
+      color: #2277cc;
+      font-size: 1.12em;
+      text-decoration: none;
+      word-break: break-all;
+      transition: color 0.2s;
+      margin-left: 2px;
+    }
+    .repo-link:hover {
+      color: #d34b1a;
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 38px;
+      text-align: center;
+      color: #aaa;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+    .footer a {
+      color: #2277cc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer a:hover {
+      color: #d34b1a;
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 18px 4px; }
+      h1 { font-size: 1.35em; }
+      .subtitle { font-size: 1.1em; }
+      .repo-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+<div class="hero-section">
+  <div class="hero-icon">📚</div>
+  <h1>Thư viện tổng hợp các tool và công cụ mô phỏng Toán THPT</h1>
+  <div class="author">Tác giả: <b>Lê Văn Quý</b></div>
+  </div>
+<style>
+.hero-section {
+  text-align: center;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(34,119,204,0.09);
+  padding: 38px 18px 28px 18px;
+  margin-bottom: 28px;
+  animation: fadeIn 1s;
+}
+.hero-icon {
+  font-size: 3em;
+  margin-bottom: 10px;
+  color: #2277cc;
+}
+h1 {
+  font-family: 'Montserrat', Arial, sans-serif;
+  color: #2277cc;
+  font-size: 2.1em;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+}
+.author {
+  font-size: 1.18em;
+  color: #2458a7;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.welcome {
+  font-size: 1.07em;
+  color: #444;
+  margin: 0 auto;
+  line-height: 1.7;
+  max-width: 480px;
+}
+.highlight {
+  color: #2277cc;
+  font-weight: 700;
+}
+.warning {
+  color: #d34b1a;
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .hero-section { padding: 14px 2px 16px 2px; }
+  h1 { font-size: 1.18em; }
+  .author { font-size: 1em; }
+}
+</style>
+    <div class="repo-list">
+      <div class="repo-card"><span class="repo-icon">🎯</span><a class="repo-link" href="https://www.geogebra.org/m/ttzngkxh?fbclid=IwY2xjawGIEERleHRuA2FlbQIxMQABHSdjq6lmd66WyQdtTnXBOv92P5mxm5x2i6BPQZORaF09E8DfILVelwFxiQ_aem_SDcg2AVJHdikbZRbqf671Q" target="_blank">Vẽ đồ thị hàm số</a></div>
+      <div class="repo-card"><span class="repo-icon">🌳</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/sodocay" target="_blank">sodocay</a></div>
+      <div class="repo-card"><span class="repo-icon">⚪</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/dientichhinhtron" target="_blank">dientichhinhtron</a></div>
+      <div class="repo-card"><span class="repo-icon">👥</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/danso" target="_blank">danso</a></div>
+      <div class="repo-card"><span class="repo-icon">📊</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/csccsn_dothi" target="_blank">csccsn_dothi</a></div>
+      <div class="repo-card"><span class="repo-icon">🗂️</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/flashcard" target="_blank">flashcard</a></div>
+      <div class="repo-card"><span class="repo-icon">🧮</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/thuoclogarit" target="_blank">thuoclogarit</a></div>
+      <div class="repo-card"><span class="repo-icon">📐</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/becongtructoado" target="_blank">becongtructoado</a></div>
+      <div class="repo-card"><span class="repo-icon">♟️</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/bancovua" target="_blank">bancovua</a></div>
+      <div class="repo-card"><span class="repo-icon">🟦</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/dientichhinhphang" target="_blank">dientichhinhphang</a></div>
+      <div class="repo-card"><span class="repo-icon">👁️</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/ocuabimat" target="_blank">ocuabimat</a></div>
+      <div class="repo-card"><span class="repo-icon">∠</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/dinhlycosin" target="_blank">dinhlycosin</a></div>
+      <div class="repo-card"><span class="repo-icon">⏰</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/thietkedongho" target="_blank">thietkedongho</a></div>
+      <div class="repo-card"><span class="repo-icon">📉</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/loinhuanhambac2" target="_blank">loinhuanhambac2</a></div>
+      <div class="repo-card"><span class="repo-icon">🧮</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/tinhtienhamsobac2" target="_blank">tinhtienhamsobac2</a></div>
+      <div class="repo-card"><span class="repo-icon">📏</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/duongtronluonggiac" target="_blank">duongtronluonggiac</a></div>
+      <div class="repo-card"><span class="repo-icon">🧩</span><a class="repo-link" href="https://nguyencunghoangnam.github.io/horner" target="_blank">horner</a></div>
+      <div class="footer">
+      &copy; 2025 nguyencunghoangnam | Tổng hợp GitHub Pages<br>
+      <a href="https://github.com/nguyencunghoangnam" target="_blank">Xem trên GitHub</a>
+    </div>
+  </div>
+</body>
+</html>
