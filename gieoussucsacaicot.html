@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Mô phỏng gieo xúc xắc – Học xác suất</title>
+<style>
+  body { font-family: sans-serif; margin:0; background:#f0f0f0; transition: background 0.5s, color 0.5s; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#2196f3; color:#fff; }
+  header h1 { font-size:20px; margin:0; }
+  #themeBtn { background:none; border:none; cursor:pointer; font-size:22px; color:#fff; }
+  .container { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:flex-start; padding:20px; }
+  .left-col { flex:1; min-width:300px; max-width:600px; }
+  .right-col { flex:1; min-width:300px; max-width:600px; display:flex; flex-direction:column; align-items:center; }
+  .controls { margin:15px 0; }
+  select, button, input { font-size:16px; padding:6px 10px; border-radius:8px; border:1px solid #999; margin:5px; }
+  button { cursor:pointer; background:#2196f3; color:#fff; border:none; transition:0.3s; }
+  button:hover { background:#1976d2; }
+ 
+
+ .dice-container { display:flex; justify-content:center; flex-wrap:wrap; gap:30px; perspective:1000px; margin:20px 0; }
+  .die { width:80px; height:80px; position:relative; transform-style:preserve-3d;
+         transition: transform 2s cubic-bezier(0.25,1.5,0.5,1); }
+  .face { position:absolute; width:80px; height:80px; border-radius:12px;
+          display:flex; flex-wrap:wrap; justify-content:center; align-content:center; }
+  .dot { width:18px; height:18px; margin:4px; background:#fff; border-radius:50%; box-shadow:0 0 4px rgba(0,0,0,0.5); }
+  .face1 { transform:rotateY(0deg) translateZ(40px); background:#ff9999; }
+  .face2 { transform:rotateY(90deg) translateZ(40px); background:#ffcc66; }
+  .face3 { transform:rotateX(90deg) translateZ(40px); background:#ffff66; }
+  .face4 { transform:rotateX(-90deg) translateZ(40px); background:#99ff99; }
+  .face5 { transform:rotateY(-90deg) translateZ(40px); background:#66ccff; }
+  .face6 { transform:rotateY(180deg) translateZ(40px); background:#cc99ff; }
+  .dark { background:#1a1a1a; color:#eee; }
+  .dark header { background:#333; }
+  .dark #themeBtn { color:#ffeb3b; }
+  canvas { margin:20px auto; display:block; background:#fff; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.3); }
+  .dark canvas { background:#333; }
+  #sampleSpace { max-height:250px; overflow:auto; text-align:left; margin:10px auto; width:80%; padding:10px;
+                 border:1px solid #aaa; border-radius:12px; background:#fafafa; display:none; }
+  .dark #sampleSpace { background:#2a2a2a; }
+
+</style>
+</head>
+<body>
+<header>
+  <h1>🎲 Mô phỏng gieo xúc xắc – Học xác suất</h1>
+  <button id="themeBtn" onclick="toggleTheme()">🌙</button>
+</header>
+
+<div class="container">
+
+  <!-- Cột trái -->
+  <div class="left-col">
+
+    <!-- chọn số xúc xắc -->
+    <div class="controls">
+      <label>Chọn số xúc xắc: 
+        <select id="numDice" onchange="initDice()">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+      <button onclick="rollAll()">Gieo 🎲</button>
+    </div>
+
+    <!-- xúc xắc -->
+    <div class="dice-container" id="diceContainer"></div>
+
+    <!-- kết quả -->
+    <h3>Kết quả gieo</h3>
+    <div id="results"></div>
+
+    <!-- không gian mẫu -->
+    <div style="display:flex; justify-content:flex-start; align-items:center; gap:10px; margin-top:20px;">
+      <h3 style="margin:0;">Không gian mẫu</h3>
+      <button onclick="toggleSampleSpace()">Hiển thị / Ẩn</button>
+    </div>
+    <div id="sampleSpace"></div>
+
+    <!-- xác suất -->
+    <h3>Tính xác suất</h3>
+    <div class="controls">
+      <label>Tổng = <input id="targetSum" type="number" style="width:80px"></label>
+      <button onclick="checkTargetSum()">Tính P</button>
+      <div id="sumResult" style="margin-top:8px;"></div>
+    </div>
+    <div class="controls">
+      <label>Tích = <input id="targetProd" type="number" style="width:80px"></label>
+      <button onclick="checkTargetProd()">Tính P</button>
+      <div id="prodResult" style="margin-top:8px;"></div>
+    </div>
+    <div class="controls">
+      <button onclick="clearResults()">🧹 Xoá kết quả</button>
+    </div>
+
+  </div>
+
+  <!-- Cột phải -->
+  <div class="right-col">
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:0;">
+      <h3 style="margin:0;">Phân bố xác suất</h3>
+      <label>Chọn loại: 
+        <select id="distType" onchange="showDistribution()">
+          <option value="sum">Tổng</option>
+          <option value="prod">Tích</option>
+        </select>
+      </label>
+    </div>
+    <canvas id="chartCanvas" width="500" height="400"></canvas>
+  </div>
+
+</div>
+
+<audio id="diceSound" src="https://www.soundjay.com/misc/sounds/dice-roll-1.mp3" preload="auto"></audio>
+
+<script>
+const diceContainer=document.getElementById("diceContainer");
+const resultsDiv=document.getElementById("results");
+const canvas=document.getElementById("chartCanvas");
+const ctx=canvas.getContext("2d");
+const sampleDiv=document.getElementById("sampleSpace");
+let dice=[], currentValues=[];
+
+function createDie(){
+  const die=document.createElement("div"); die.className="die";
+  const pips={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  for(let i=1;i<=6;i++){
+    const face=document.createElement("div"); face.className="face face"+i;
+    for(let j=0;j<9;j++){
+      const cell=document.createElement("div");
+      cell.style.width="26px"; cell.style.height="26px";
+      cell.style.display="flex"; cell.style.justifyContent="center"; cell.style.alignItems="center";
+      if(pips[i].includes(j)){ const dot=document.createElement("div"); dot.className="dot"; cell.appendChild(dot);}
+      face.appendChild(cell);
+    }
+    die.appendChild(face);
+  }
+  return die;
+}
+
+function initDice(){
+  diceContainer.innerHTML=""; dice=[];
+  const n=parseInt(document.getElementById("numDice").value);
+  for(let i=0;i<n;i++){ const d=createDie(); diceContainer.appendChild(d); dice.push(d); }
+  sampleDiv.style.display="none";
+}
+
+function rollDie(die,value){
+  const orientations={1:{x:0,y:0},2:{x:0,y:-90},3:{x:-90,y:0},4:{x:90,y:0},5:{x:0,y:90},6:{x:180,y:0}};
+  const o=orientations[value];
+  const extraX=360*(2+Math.floor(Math.random()*2));
+  const extraY=360*(2+Math.floor(Math.random()*2));
+  die.style.transform=`rotateX(${o.x+extraX}deg) rotateY(${o.y+extraY}deg)`;
+}
+
+function rollAll(){
+  document.getElementById("diceSound").play();
+  currentValues=[];
+  dice.forEach(d=>{
+    const v=1+Math.floor(Math.random()*6);
+    currentValues.push(v); rollDie(d,v);
+  });
+  setTimeout(showResults,2000);
+}
+
+function showResults(){
+  const sum=currentValues.reduce((a,b)=>a+b,0);
+  const prod=currentValues.reduce((a,b)=>a*b,1);
+  resultsDiv.innerHTML=`Mặt hiện ra: ${currentValues.join(", ")} | Tổng = <b>${sum}</b>, Tích = <b>${prod}</b>`;
+  showDistribution();
+}
+
+function allOutcomes(n){
+  let res=[[]];
+  for(let i=0;i<n;i++){
+    let newRes=[];
+    res.forEach(r=>{ for(let v=1;v<=6;v++) newRes.push([...r,v]); });
+    res=newRes;
+  }
+  return res;
+}
+
+function checkTargetSum(){
+  const k=parseInt(document.getElementById("targetSum").value); if(!k) return;
+  const n=dice.length, outcomes=allOutcomes(n), total=outcomes.length;
+  const good=outcomes.filter(o=>o.reduce((a,b)=>a+b,0)===k).length;
+  document.getElementById("sumResult").innerHTML=
+    `Xác suất (Tổng=${k}) = ${good}/${total} = ${(good/total).toFixed(4)} 👉 Nghĩa là: tổng các mặt bằng ${k} khi gieo ${n} xúc xắc.`;
+}
+
+function checkTargetProd(){
+  const k=parseInt(document.getElementById("targetProd").value); if(!k) return;
+  const n=dice.length, outcomes=allOutcomes(n), total=outcomes.length;
+  const good=outcomes.filter(o=>o.reduce((a,b)=>a*b,1)===k).length;
+  document.getElementById("prodResult").innerHTML=
+    `Xác suất (Tích=${k}) = ${good}/${total} = ${(good/total).toFixed(4)} 👉 Nghĩa là: tích các mặt bằng ${k} khi gieo ${n} xúc xắc.`;
+}
+
+function showDistribution(){
+  const type=document.getElementById("distType").value;
+  const n=dice.length, outcomes=allOutcomes(n), total=outcomes.length;
+  let count={};
+  outcomes.forEach(o=>{
+    const val=(type==="sum")?o.reduce((a,b)=>a+b,0):o.reduce((a,b)=>a*b,1);
+    count[val]=(count[val]||0)+1;
+  });
+  animateChart(count,total,type);
+}
+
+function animateChart(data,total,type){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const keys=Object.keys(data).map(Number).sort((a,b)=>a-b);
+  const maxVal=Math.max(...Object.values(data));
+  const barWidth=canvas.width/keys.length;
+  let progress=0;
+  function step(){
+    progress+=0.03;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    keys.forEach((k,i)=>{
+      const val=data[k];
+      const h=(val/maxVal)*(canvas.height-60)*Math.min(progress,1);
+      const x=i*barWidth+10, y=canvas.height-h-30;
+      const grad=ctx.createLinearGradient(0,y,0,y+h);
+      grad.addColorStop(0,"#4facfe"); grad.addColorStop(1,"#00f2fe");
+      ctx.fillStyle=grad; ctx.fillRect(x,y,barWidth-20,h);
+      ctx.fillStyle="black"; ctx.textAlign="center"; ctx.font="12px sans-serif";
+      ctx.fillText(k, x+(barWidth-20)/2, canvas.height-10);
+      if(progress>=1) ctx.fillText((val/total).toFixed(3), x+(barWidth-20)/2, y-5);
+    });
+    if(progress<1) requestAnimationFrame(step);
+  }
+  step();
+}
+
+function toggleSampleSpace(){
+  const n=dice.length; if(n===0) return;
+  if(sampleDiv.style.display==="block"){ sampleDiv.style.display="none"; return; }
+  const outcomes=allOutcomes(n); const total=outcomes.length;
+  let html=`<b>Số phần tử của không gian mẫu = ${total}</b><br>`;
+  const maxShow=100;
+  html+=outcomes.slice(0,maxShow).map(o=>"("+o.join(",")+")").join(", ");
+  if(outcomes.length>maxShow){
+    html+=`... <br><button onclick="showAllOutcomes()">Xem toàn bộ</button>`;
+    window._allOutcomes=outcomes; // lưu tạm
+  }
+  sampleDiv.innerHTML=html;
+  sampleDiv.style.display="block";
+}
+
+function showAllOutcomes(){
+  const outcomes=window._allOutcomes;
+  sampleDiv.innerHTML=`<b>Tất cả ${outcomes.length} phần tử:</b><br>`+
+    outcomes.map(o=>"("+o.join(",")+")").join(", ");
+}
+
+function clearResults(){
+  document.getElementById("sumResult").innerHTML="";
+  document.getElementById("prodResult").innerHTML="";
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+  const btn=document.getElementById("themeBtn");
+  btn.textContent=document.body.classList.contains("dark")?"☀️":"🌙";
+}
+
+// khởi tạo mặc định 2 xúc xắc
+initDice();
+</script>
+</body>
+</html>
